@@ -1,0 +1,14 @@
+# AgriConnect settings. Keep this file private: never share it or upload it to GitHub.
+
+# Secret used to sign login tokens. Already set to a random value for you.
+JWT_SECRET=9ce22dcca9a82223e145950767eca4fc849a71bc4925606d698d5ead335be1ed
+
+# Optional: turn on real AI search. Remove the # and paste your key.
+# Leave this line commented out (or delete it) to use the built-in fallback search.
+# OPENAI_API_KEY=sk-your-key-here
+
+# Optional: which OpenAI model to use for search.
+# LLM_MODEL=gpt-4o-mini
+
+# Optional: where the database file lives (default is shown).
+# DATABASE_URL=sqlite:///./agriconnect.db

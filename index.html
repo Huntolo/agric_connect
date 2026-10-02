@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgriConnect | Buy straight from the farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1A2B1E;
+  --muted:#586A5C;
+  --leaf:#2D6A3E;
+  --leaf-deep:#1B4528;
+  --paper:#F2F4EC;
+  --panel:#FFFFFF;
+  --line:#D3DAC6;
+  --turmeric:#F0B429;
+  --turmeric-deep:#8A6100;
+  --danger:#B3261E;
+  --sans:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);font-size:16px;line-height:1.5;color:var(--ink);background:var(--paper)}
+h1,h2,h3{font-weight:700;line-height:1.15;margin:0}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--turmeric);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:1.25rem;padding:.75rem clamp(1rem,4vw,2.5rem);background:var(--leaf-deep);color:#fff;position:sticky;top:0;z-index:20}
+.brand{font-weight:800;font-size:1.35rem;text-decoration:none;letter-spacing:-.01em}
+.top nav{display:flex;gap:.25rem;flex:1}
+.top nav a{padding:.4rem .8rem;border-radius:999px;text-decoration:none;color:#D5E5D8}
+.top nav a[aria-current="page"]{background:rgba(255,255,255,.14);color:#fff}
+.top nav a:hover{color:#fff}
+.actions{display:flex;align-items:center;gap:.5rem}
+.who{font-size:.95rem;color:#D5E5D8;max-width:12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{border:0;border-radius:999px;padding:.6rem 1.15rem;font-weight:600;cursor:pointer;background:var(--panel);color:var(--ink);border:1.5px solid var(--line)}
+.btn:hover{border-color:var(--leaf)}
+.btn.primary{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.btn.primary:hover{background:var(--leaf-deep)}
+.btn.gold{background:var(--turmeric);border-color:var(--turmeric);color:#2A1E00}
+.btn.gold:hover{background:#FFC93C}
+.btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.btn.ghost:hover{border-color:#fff}
+.btn.small{padding:.35rem .8rem;font-size:.9rem}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.cartbtn{position:relative}
+.cartbtn .n{display:inline-grid;place-items:center;min-width:1.4rem;height:1.4rem;padding:0 .35rem;margin-left:.3rem;border-radius:999px;background:var(--turmeric);color:#2A1E00;font-size:.8rem;font-weight:700}
+
+#banner{padding:.7rem clamp(1rem,4vw,2.5rem);background:#FFF1C7;color:#4A3600;border-bottom:1px solid #E8CF82}
+
+/* hero */
+.hero{background:var(--leaf-deep);color:#fff;padding:clamp(2rem,6vw,4.5rem) clamp(1rem,4vw,2.5rem) clamp(2.5rem,6vw,4rem)}
+.hero-in{max-width:56rem}
+.hero h1{font-size:clamp(2.1rem,5.4vw,3.7rem);letter-spacing:-.02em;max-width:18ch}
+.hero .lede{margin-top:1rem;color:#CFE2D3;max-width:46ch;font-size:1.1rem}
+.searchbar{display:flex;gap:.5rem;margin-top:2rem;background:var(--paper);padding:.5rem;border-radius:18px;max-width:46rem}
+.searchbar input{flex:1;min-width:0;border:0;background:transparent;padding:.8rem 1rem;font-size:1.2rem;color:var(--ink)}
+.searchbar input::placeholder{color:#7C8B80}
+.searchbar input:focus-visible{outline:none}
+.searchbar:focus-within{outline:3px solid var(--turmeric);outline-offset:2px}
+.searchbar .btn{padding:.8rem 1.5rem;font-size:1.05rem}
+.try{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center;color:#CFE2D3;font-size:.95rem}
+.chip{border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:.25rem .8rem;cursor:pointer;font-size:.92rem}
+.chip:hover{border-color:var(--turmeric);color:var(--turmeric)}
+.stat{margin-top:1.25rem;color:#A9C4AE;font-size:.95rem}
+
+/* shelf */
+.wrap{max-width:74rem;margin:0 auto;padding:clamp(1.25rem,3vw,2.25rem) clamp(1rem,4vw,2.5rem) 4rem}
+.shelf-head{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem;margin-bottom:1.25rem}
+.shelf-head h2{font-size:1.5rem;margin-right:auto}
+.filters{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.filters select{border:1.5px solid var(--line);background:var(--panel);border-radius:8px;padding:.45rem .7rem}
+.check{display:inline-flex;gap:.45rem;align-items:center;cursor:pointer}
+.check input{width:1.1rem;height:1.1rem;accent-color:var(--leaf)}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.pill{background:#E1EBD6;border-radius:999px;padding:.2rem .7rem;font-size:.92rem}
+.note{font-family:var(--serif);font-size:1.15rem;line-height:1.6;border-left:5px solid var(--turmeric);padding:.4rem 0 .4rem 1.1rem;margin:0 0 1.75rem;max-width:62ch}
+.note small{display:block;font-family:var(--sans);font-size:.85rem;color:var(--muted);margin-top:.35rem}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(15.5rem,1fr));gap:1.1rem}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.glyph{height:7.5rem;display:grid;place-items:center;font-size:3.6rem;position:relative}
+.best{position:absolute;top:.6rem;left:.6rem;font-size:.82rem;font-weight:700;background:var(--leaf-deep);color:#fff;border-radius:999px;padding:.15rem .65rem}
+.tbody{padding:.9rem 1rem 1rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
+.tbody h3{font-size:1.15rem}
+.farm{color:var(--muted);font-size:.95rem}
+.trow{display:flex;align-items:center;gap:.6rem;margin-top:.2rem}
+.tag{background:var(--turmeric);color:#2A1E00;font-weight:800;font-size:1.15rem;padding:.2rem .75rem .2rem 1.35rem;clip-path:polygon(.7rem 0,100% 0,100% 100%,.7rem 100%,0 50%)}
+.tag small{font-weight:500;font-size:.85rem}
+.org{font-size:.85rem;font-weight:600;color:var(--leaf)}
+.tbody .btn{margin-top:auto}
+.empty{padding:2.5rem 1rem;color:var(--muted);max-width:42ch}
+.empty strong{display:block;color:var(--ink);font-size:1.2rem;margin-bottom:.35rem}
+
+/* panels / forms */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.5rem;max-width:40rem}
+.panel h2{font-size:1.5rem;margin-bottom:.35rem}
+.panel .sub{color:var(--muted);margin-bottom:1.25rem}
+.field{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.9rem}
+.field label,.field legend{font-weight:600;font-size:.95rem}
+.field input,.field select,.field textarea{border:1.5px solid var(--line);border-radius:8px;padding:.6rem .75rem;background:#fff;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--leaf)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.err{color:var(--danger);font-size:.95rem;min-height:1.2rem;margin:.25rem 0 .6rem}
+.radios{display:flex;gap:.6rem;flex-wrap:wrap}
+.radios label{display:flex;align-items:center;gap:.4rem;border:1.5px solid var(--line);border-radius:999px;padding:.4rem .9rem;cursor:pointer;font-weight:500}
+.radios label:has(input:checked){border-color:var(--leaf);background:#E7F0DE}
+.radios input{accent-color:var(--leaf)}
+.stack{display:grid;gap:2rem}
+fieldset{border:0;padding:0;margin:0}
+
+/* orders */
+.orders{display:grid;gap:.8rem;max-width:44rem}
+.order{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;display:grid;gap:.4rem}
+.order .top2{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.status{font-weight:700;font-size:.9rem;border-radius:999px;padding:.1rem .65rem;background:#E1EBD6;text-transform:capitalize}
+.status.disputed,.status.cancelled{background:#F6D9D6;color:var(--danger)}
+.mono{font-size:.85rem;color:var(--muted);word-break:break-all}
+
+/* drawer */
+#scrim{position:fixed;inset:0;background:rgba(15,25,18,.5);z-index:30}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(26rem,100%);background:var(--panel);z-index:31;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s ease;box-shadow:-12px 0 32px rgba(0,0,0,.18)}
+#drawer.open{transform:none}
+.d-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line)}
+.d-head h2{font-size:1.3rem}
+.x{background:none;border:0;font-size:1.7rem;line-height:1;cursor:pointer;padding:.1rem .5rem;border-radius:8px;color:var(--muted)}
+.x:hover{color:var(--ink)}
+.d-body{flex:1;overflow:auto;padding:1rem 1.25rem}
+.d-foot{border-top:1px solid var(--line);padding:1rem 1.25rem;display:grid;gap:.75rem}
+.cgroup{margin-bottom:1.25rem}
+.cgroup h3{font-size:1rem;margin-bottom:.5rem;color:var(--leaf-deep)}
+.citem{display:grid;grid-template-columns:1fr auto;gap:.2rem .75rem;padding:.55rem 0;border-top:1px solid var(--line)}
+.citem .nm{font-weight:600}
+.citem .pr{font-weight:700;text-align:right}
+.citem .qty{display:flex;align-items:center;gap:.4rem;color:var(--muted);font-size:.92rem}
+.citem input{width:4.5rem;border:1.5px solid var(--line);border-radius:6px;padding:.25rem .4rem}
+.linkbtn{background:none;border:0;color:var(--danger);cursor:pointer;text-decoration:underline;font-size:.9rem;padding:0;text-align:right}
+.totalrow{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem}
+.fine{font-size:.88rem;color:var(--muted)}
+.ok{background:#E3F1DB;border:1px solid #B9D8A8;border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem}
+
+dialog{border:0;border-radius:16px;padding:0;width:min(28rem,calc(100% - 2rem));color:var(--ink);background:var(--panel)}
+dialog::backdrop{background:rgba(15,25,18,.55)}
+.dlg{padding:1.25rem 1.5rem 1.5rem}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.dlg-head h2{font-size:1.4rem}
+.swap{margin-top:1rem;color:var(--muted);font-size:.95rem}
+.swap button{background:none;border:0;color:var(--leaf);font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
+
+#toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(150%);background:var(--ink);color:#fff;padding:.65rem 1.1rem;border-radius:999px;z-index:50;transition:transform .2s ease;max-width:calc(100% - 2rem)}
+#toast.show{transform:translateX(-50%)}
+
+@media (max-width:640px){
+  .top{flex-wrap:wrap;gap:.5rem}
+  .top nav{order:3;flex-basis:100%}
+  .who{display:none}
+  .row2{grid-template-columns:1fr}
+  .searchbar{flex-direction:column;border-radius:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  #drawer,#toast{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#market">AgriConnect</a>
+  <nav id="nav" aria-label="Main"></nav>
+  <div class="actions" id="actions"></div>
+</header>
+<div id="banner" hidden></div>
+<main id="main"></main>
+
+<div id="scrim" hidden></div>
+<aside id="drawer" aria-label="Your cart" aria-hidden="true"></aside>
+<dialog id="authDlg" aria-label="Account"></dialog>
+<dialog id="actionDlg" aria-label="Order action"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const naira = n => "₦" + Number(n).toLocaleString("en-NG", { maximumFractionDigits: 2 });
+const API = location.protocol === "file:" ? "http://localhost:8000" : "";
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+/* ---------- state ---------- */
+let token = store.get("ac_token", null);
+let me = null;
+let cart = store.get("ac_cart", []);
+let myOrders = store.get("ac_orders", []);
+let listings = [];
+let catalog = {};            // product_id -> item, so "Add to cart" can find it
+let search = null;           // { query, data }
+let searching = false;
+let filt = { cat: "", org: false };
+let needsPatch = false;
+let serverDown = false;
+let actionCtx = null;
+
+/* ---------- api ---------- */
+function errText(data, status) {
+  if (data && typeof data.detail === "string") return data.detail;
+  if (data && Array.isArray(data.detail)) {
+    return data.detail.map(d => {
+      const field = Array.isArray(d.loc) ? d.loc[d.loc.length - 1] : "";
+      return field ? `${field}: ${d.msg}` : d.msg;
+    }).join(". ");
+  }
+  return `Request failed (${status})`;
+}
+async function api(path, { method = "GET", body, form } = {}) {
+  const headers = {};
+  if (token) headers.Authorization = "Bearer " + token;
+  let payload;
+  if (form) { headers["Content-Type"] = "application/x-www-form-urlencoded"; payload = new URLSearchParams(form); }
+  else if (body) { headers["Content-Type"] = "application/json"; payload = JSON.stringify(body); }
+  let res;
+  try { res = await fetch(API + path, { method, headers, body: payload }); }
+  catch (e) { const err = new Error("Can't reach the server. Is uvicorn running?"); err.network = true; throw err; }
+  let data = null;
+  try { data = await res.json(); } catch {}
+  if (!res.ok) { const err = new Error(errText(data, res.status)); err.status = res.status; throw err; }
+  return data;
+}
+
+/* ---------- small ui utils ---------- */
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+function setBanner() {
+  const b = $("#banner");
+  let msg = "";
+  if (serverDown) msg = "Can't reach the server. Start it with: python -m uvicorn agriconnect:app --reload";
+  else if (needsPatch) msg = "Your server is missing the front end routes. Paste the patch into agriconnect.py (step 1 in the instructions) so farm names and the Sell page work.";
+  b.textContent = msg;
+  b.hidden = !msg;
+}
+const GLYPHS = [
+  [/tomato/, "🍅"], [/pepper|chilli|tatashe|rodo/, "🌶️"], [/onion/, "🧅"], [/yam|potato/, "🍠"],
+  [/cassava|garri/, "🥔"], [/plantain|banana/, "🍌"], [/orange|citrus/, "🍊"], [/pineapple/, "🍍"],
+  [/maize|corn/, "🌽"], [/bean|cowpea|peas?\b/, "🫘"], [/rice|grain|millet|sorghum/, "🌾"],
+  [/egg/, "🥚"], [/chicken|poultry|turkey/, "🐔"], [/milk|dairy|cheese|yog/, "🥛"],
+  [/fish|catfish|tilapia/, "🐟"], [/cabbage|lettuce|spinach|ugu|vegetable|greens|leaf/, "🥬"],
+  [/carrot/, "🥕"], [/cucumber/, "🥒"], [/watermelon|melon/, "🍉"], [/mango/, "🥭"],
+  [/avocado|pear/, "🥑"], [/garlic/, "🧄"], [/honey/, "🍯"], [/goat|cow|beef|meat|livestock|pig/, "🐐"],
+  [/fruit|apple/, "🍎"]
+];
+function glyph(p) {
+  const s = `${p.name} ${p.category}`.toLowerCase();
+  for (const [re, g] of GLYPHS) if (re.test(s)) return g;
+  return "🌱";
+}
+function tint(p) {
+  const hues = [95, 48, 28, 140, 170, 70];
+  let h = 0;
+  for (const c of String(p.category || p.name)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return `hsl(${hues[h % hues.length]} 48% 86%)`;
+}
+function index(items) { items.forEach(p => { catalog[p.product_id] = p; }); }
+
+/* ---------- data loading ---------- */
+async function loadMe() {
+  if (!token) { me = null; return; }
+  try { me = await api("/api/v1/users/me"); }
+  catch (e) {
+    if (e.status === 401) { token = null; store.set("ac_token", null); me = null; }
+    else if (e.status === 404) { needsPatch = true; me = { role: "unknown", name: "Account", has_profile: false }; }
+    else { me = null; if (e.network) serverDown = true; }
+  }
+}
+async function loadListings() {
+  serverDown = false;
+  try { listings = await api("/api/v1/marketplace"); }
+  catch (e) {
+    if (e.network) { serverDown = true; listings = []; }
+    else {
+      try {
+        const raw = await api("/api/v1/products/");
+        listings = raw.map(p => ({
+          product_id: p.id, name: p.name, category: p.category, price: p.price, unit: p.unit,
+          is_organic: p.is_organic, farmer_id: p.farmer_id, farmer_name: "Farm listing", farmer_rating: null
+        }));
+        needsPatch = true;
+      } catch (e2) { listings = []; serverDown = !!e2.network; }
+    }
+  }
+  index(listings);
+  setBanner();
+}
+
+/* ---------- chrome (nav, account, cart count) ---------- */
+function renderChrome() {
+  const h = (location.hash.slice(1) || "market");
+  const link = (id, label) => `<a href="#${id}" ${h === id ? 'aria-current="page"' : ""}>${label}</a>`;
+  $("#nav").innerHTML = link("market", "Market") + link("sell", "Sell your produce") + (me ? link("orders", "My orders") : "");
+  const count = cart.reduce((n, i) => n + 1, 0);
+  const acct = me
+    ? `<span class="who">${esc(me.name)}</span><button class="btn ghost small" data-logout>Log out</button>`
+    : token
+      ? `<button class="btn ghost small" data-logout>Log out</button>`
+      : `<button class="btn ghost small" data-open-auth="login">Log in</button><button class="btn gold small" data-open-auth="register">Sign up</button>`;
+  $("#actions").innerHTML = acct +
+    `<button class="btn small cartbtn" data-open-cart aria-label="Open cart, ${count} item${count === 1 ? "" : "s"}">Cart<span class="n">${count}</span></button>`;
+}
+
+/* ---------- market view ---------- */
+const EXAMPLES = ["cheap organic tomatoes under 2000", "fresh pepper", "organic vegetables", "eggs under 3000"];
+
+function renderMarket() {
+  const farms = new Set(listings.map(l => l.farmer_id)).size;
+  $("#main").innerHTML = `
+  <section class="hero">
+    <div class="hero-in">
+      <h1>Buy straight from the farm. Ask in your own words.</h1>
+      <p class="lede">Type what you want and your budget. We read it, check every farm's live listings, and tell you which one to buy.</p>
+      <form class="searchbar" id="searchForm" role="search">
+        <input id="q" type="text" autocomplete="off" aria-label="What are you looking for?" placeholder="e.g. cheap organic tomatoes under 2000" value="${esc(search ? search.query : "")}">
+        <button class="btn gold" type="submit">Find produce</button>
+      </form>
+      <div class="try"><span>Try:</span>${EXAMPLES.map(e => `<button class="chip" type="button" data-chip="${esc(e)}">${esc(e)}</button>`).join("")}</div>
+      <p class="stat">${listings.length ? `${listings.length} listing${listings.length === 1 ? "" : "s"} from ${farms} farm${farms === 1 ? "" : "s"} right now` : "No listings yet"}</p>
+    </div>
+  </section>
+  <div class="wrap" id="shelf"></div>`;
+  renderShelf();
+}
+
+function tile(p, best) {
+  const rating = p.farmer_rating ? `★ ${p.farmer_rating}` : "No ratings yet";
+  return `
+  <article class="tile">
+    <div class="glyph" style="background:${tint(p)}" aria-hidden="true">${glyph(p)}${best ? '<span class="best">Best match</span>' : ""}</div>
+    <div class="tbody">
+      <h3>${esc(p.name)}</h3>
+      <p class="farm">${esc(p.farmer_name)} · ${esc(rating)}</p>
+      <div class="trow">
+        <span class="tag">${naira(p.price)}<small> / ${esc(p.unit)}</small></span>
+        ${p.is_organic ? '<span class="org">Organic</span>' : ""}
+      </div>
+      <button class="btn primary" data-add="${esc(p.product_id)}">Add to cart</button>
+    </div>
+  </article>`;
+}
+
+function renderShelf() {
+  const shelf = $("#shelf");
+  if (!shelf) return;
+  if (searching) { shelf.innerHTML = `<p class="empty"><strong>Searching…</strong>Checking live listings from every farm.</p>`; return; }
+
+  if (search) {
+    const d = search.data, p = d.interpreted_query || {}, res = d.results || [];
+    const tags = [];
+    if (p.keywords) tags.push(`Looking for: ${esc(p.keywords)}`);
+    if (p.organic_only) tags.push("Organic only");
+    if (p.max_price) tags.push(`Under ${naira(p.max_price)}`);
+    if (p.category) tags.push(`Category: ${esc(p.category)}`);
+    shelf.innerHTML = `
+      <div class="shelf-head">
+        <h2>Results for “${esc(search.query)}”</h2>
+        <button class="btn small" data-clear-search>Show all produce</button>
+      </div>
+      ${tags.length ? `<div class="tags" style="margin-bottom:1.25rem">${tags.map(t => `<span class="pill">${t}</span>`).join("")}</div>` : ""}
+      ${d.ai_summary ? `<blockquote class="note">${esc(d.ai_summary)}<small>Written from the listings below, not from outside prices.</small></blockquote>` : ""}
+      ${res.length
+        ? `<div class="grid">${res.map((r, i) => tile(r, i === 0)).join("")}</div>`
+        : `<div class="empty"><strong>Nothing matched that search.</strong>Try fewer words, a higher budget, or turn off “organic”.</div>`}`;
+    return;
+  }
+
+  const cats = [...new Set(listings.map(l => l.category))].sort();
+  let shown = listings.filter(l => (!filt.cat || l.category === filt.cat) && (!filt.org || l.is_organic));
+  shelf.innerHTML = `
+    <div class="shelf-head">
+      <h2>All produce</h2>
+      <div class="filters">
+        <select id="catFilter" aria-label="Category">
+          <option value="">All categories</option>
+          ${cats.map(c => `<option ${filt.cat === c ? "selected" : ""}>${esc(c)}</option>`).join("")}
+        </select>
+        <label class="check"><input type="checkbox" id="orgFilter" ${filt.org ? "checked" : ""}> Organic only</label>
+      </div>
+    </div>
+    ${shown.length
+      ? `<div class="grid">${shown.map(l => tile(l, false)).join("")}</div>`
+      : `<div class="empty"><strong>${listings.length ? "No produce matches those filters." : "No produce is listed yet."}</strong>${listings.length ? "Clear a filter to see more." : "Farmers can add listings from the Sell page."}</div>`}`;
+}
+
+async function runSearch(q) {
+  q = q.trim();
+  if (!q) return;
+  searching = true; search = null;
+  renderShelf();
+  try {
+    const data = await api("/api/v1/search/", { method: "POST", body: { query: q, max_results: 12 } });
+    (data.results || []).forEach(r => { catalog[r.product_id] = r; });
+    search = { query: q, data };
+  } catch (e) {
+    toast(e.message);
+    if (e.network) { serverDown = true; setBanner(); }
+  }
+  searching = false;
+  renderShelf();
+  $("#shelf")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ---------- sell view ---------- */
+const CATS = ["Vegetables", "Fruits", "Grains", "Tubers", "Poultry", "Eggs", "Dairy", "Fish", "Livestock", "Spices"];
+
+function renderSell() {
+  const main = $("#main");
+  const gate = (title, text, buttons) => {
+    main.innerHTML = `<div class="wrap"><div class="panel"><h2>${title}</h2><p class="sub">${text}</p>${buttons}</div></div>`;
+  };
+  if (!me) {
+    return gate("Sell your produce on AgriConnect",
+      "Create a farmer account to list what you grow. Customers searching for your crop will see your farm and price.",
+      `<button class="btn primary" data-open-auth="register">Create a farmer account</button> <button class="btn" data-open-auth="login">I already have one</button>`);
+  }
+  if (me.role === "customer") {
+    return gate("This is a customer account",
+      "Only farmer accounts can list produce. Log out and create a farmer account to start selling.",
+      `<button class="btn" data-logout>Log out</button>`);
+  }
+  if (needsPatch && me.role === "unknown") {
+    return gate("One more setup step", "The Sell page needs the extra routes from the patch. Paste it into agriconnect.py and refresh this page.", "");
+  }
+  if (!me.has_profile) {
+    main.innerHTML = `<div class="wrap"><div class="panel">
+      <h2>Set up your farm</h2>
+      <p class="sub">Customers will see this name next to your produce.</p>
+      <form id="profileForm">
+        <div class="field"><label for="pf-name">Farm name</label><input id="pf-name" required maxlength="80" placeholder="e.g. Ade Family Farm"></div>
+        <div class="field"><label for="pf-cert">Certifications (optional)</label><input id="pf-cert" placeholder="e.g. organic, NAFDAC"></div>
+        <div class="field"><label for="pf-rad">Delivery radius (km)</label><input id="pf-rad" type="number" min="0" step="1" value="10"></div>
+        <p class="err" id="pfErr"></p>
+        <button class="btn primary" type="submit">Save farm</button>
+      </form></div></div>`;
+    return;
+  }
+  const mine = listings.filter(l => l.farmer_id === me.farmer_profile_id);
+  main.innerHTML = `<div class="wrap stack">
+    <div class="panel">
+      <h2>Add a listing for ${esc(me.farm_name)}</h2>
+      <p class="sub">It appears in the market and in AI search straight away.</p>
+      <form id="productForm">
+        <div class="row2">
+          <div class="field"><label for="p-name">Product</label><input id="p-name" required placeholder="e.g. Fresh tomatoes"></div>
+          <div class="field"><label for="p-cat">Category</label><input id="p-cat" required list="catlist" placeholder="e.g. Vegetables"><datalist id="catlist">${CATS.map(c => `<option>${c}</option>`).join("")}</datalist></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="p-unit">Sold by</label><input id="p-unit" required placeholder="kg, crate, dozen…"></div>
+          <div class="field"><label for="p-price">Price per unit (₦)</label><input id="p-price" type="number" min="1" step="any" required></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="p-stock">Quantity in stock</label><input id="p-stock" type="number" min="0" step="any" required></div>
+          <div class="field"><label>&nbsp;</label><label class="check" style="padding:.6rem 0"><input type="checkbox" id="p-org"> This is organic</label></div>
+        </div>
+        <div class="field"><label for="p-desc">Description (optional)</label><textarea id="p-desc" rows="2" placeholder="Harvest day, variety, how it was grown"></textarea></div>
+        <p class="err" id="pErr"></p>
+        <button class="btn primary" type="submit">Publish listing</button>
+      </form>
+    </div>
+    <section>
+      <div class="shelf-head"><h2>Your listings</h2></div>
+      ${mine.length ? `<div class="grid">${mine.map(l => tile(l, false).replace(/<button class="btn primary"[^>]*>Add to cart<\/button>/, "")).join("")}</div>`
+        : `<div class="empty"><strong>No listings yet.</strong>Add your first product above.</div>`}
+    </section></div>`;
+}
+
+/* ---------- orders view ---------- */
+async function renderOrders() {
+  const main = $("#main");
+  if (!me) {
+    main.innerHTML = `<div class="wrap"><div class="panel"><h2>Log in to see your orders</h2><p class="sub">Orders you place on this device show up here.</p><button class="btn primary" data-open-auth="login">Log in</button></div></div>`;
+    return;
+  }
+  if (!myOrders.length) {
+    main.innerHTML = `<div class="wrap"><div class="empty"><strong>No orders yet.</strong>Orders you place from this browser will show up here with their latest status.</div></div>`;
+    return;
+  }
+  main.innerHTML = `<div class="wrap"><div class="shelf-head"><h2>My orders</h2></div><div class="orders" id="ordersList"><p class="fine">Loading…</p></div></div>`;
+  const results = await Promise.allSettled(myOrders.slice(0, 20).map(o => api(`/api/v1/orders/${o.id}`)));
+  const rows = myOrders.slice(0, 20).map((o, i) => {
+    const r = results[i];
+    const st = r.status === "fulfilled" ? r.value.status : "unknown";
+    const total = r.status === "fulfilled" ? r.value.total_amount : o.total;
+    const date = new Date(o.at).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" });
+    let act = "";
+    if (st === "completed") act = `<button class="btn small" data-review="${esc(o.id)}">Leave a review</button>`;
+    else if (st !== "cancelled" && st !== "disputed" && st !== "unknown") act = `<button class="btn small" data-report="${esc(o.id)}">Report a problem</button>`;
+    return `<div class="order">
+      <div class="top2"><strong>${esc(o.farm)}</strong><span class="status ${esc(st)}">${esc(st.replace(/_/g, " "))}</span></div>
+      <div>${naira(total)} · ${esc(date)}</div>
+      <div class="mono">Order ${esc(o.id)}</div>
+      ${act ? `<div>${act}</div>` : ""}
+    </div>`;
+  });
+  const list = $("#ordersList");
+  if (list) list.innerHTML = rows.join("");
+}
+
+/* ---------- cart ---------- */
+function saveCart() { store.set("ac_cart", cart); renderChrome(); }
+function addToCart(id) {
+  const p = catalog[id];
+  if (!p) return;
+  const found = cart.find(i => i.product_id === id);
+  if (found) found.qty += 1;
+  else cart.push({ product_id: id, name: p.name, price: p.price, unit: p.unit, farmer_id: p.farmer_id, farmer_name: p.farmer_name, qty: 1 });
+  saveCart();
+  toast(`Added ${p.name} to your cart`);
+}
+function openDrawer() {
+  renderCart();
+  $("#scrim").hidden = false;
+  const d = $("#drawer");
+  d.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => d.classList.add("open"));
+}
+function closeDrawer() {
+  $("#drawer").classList.remove("open");
+  $("#drawer").setAttribute("aria-hidden", "true");
+  $("#scrim").hidden = true;
+}
+function renderCart(msgs = "") {
+  const d = $("#drawer");
+  const groups = {};
+  cart.forEach(i => { (groups[i.farmer_id] ||= []).push(i); });
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const body = cart.length
+    ? Object.values(groups).map(items => `
+      <div class="cgroup">
+        <h3>${esc(items[0].farmer_name)}</h3>
+        ${items.map(i => `
+          <div class="citem">
+            <span class="nm">${esc(i.name)}</span><span class="pr">${naira(i.price * i.qty)}</span>
+            <span class="qty"><input type="number" min="0.5" step="0.5" value="${i.qty}" data-qty="${esc(i.product_id)}" aria-label="Quantity of ${esc(i.name)}"> ${esc(i.unit)} × ${naira(i.price)}</span>
+            <button class="linkbtn" data-remove="${esc(i.product_id)}">Remove</button>
+          </div>`).join("")}
+      </div>`).join("")
+    : (msgs ? "" : `<div class="empty"><strong>Your cart is empty.</strong>Add produce from the market and it will wait here.</div>`);
+  d.innerHTML = `
+    <div class="d-head"><h2>Your cart</h2><button class="x" data-close-drawer aria-label="Close cart">×</button></div>
+    <div class="d-body" id="cartBody">${msgs}${body}</div>
+    ${cart.length ? `<div class="d-foot">
+      <fieldset class="field"><legend>How do you want to get it?</legend>
+        <div class="radios">
+          <label><input type="radio" name="ful" value="pickup" checked> Pickup</label>
+          <label><input type="radio" name="ful" value="delivery"> Delivery</label>
+        </div></fieldset>
+      <div class="field"><label for="payMethod">Pay with</label>
+        <select id="payMethod"><option value="mobile_money">Mobile money</option><option value="card">Card</option><option value="wallet">Wallet</option><option value="cod">Cash on delivery</option></select></div>
+      <div class="totalrow"><span>Items total</span><span>${naira(subtotal)}</span></div>
+      <p class="fine">Each farm gets its own order. A delivery fee, if any, is added to each order.</p>
+      <button class="btn primary" id="checkoutBtn" data-checkout>${me ? "Place order" : "Log in to place order"}</button>
+    </div>` : ""}`;
+}
+async function checkout() {
+  if (!me) { closeDrawer(); openAuth("login"); return; }
+  if (me.role === "farmer") { toast("Farmer accounts can't place orders. Use a customer account."); return; }
+  const fulfillment = $("input[name=ful]:checked").value;
+  const method = $("#payMethod").value;
+  const btn = $("#checkoutBtn");
+  btn.disabled = true; btn.textContent = "Placing order…";
+  const groups = {};
+  cart.forEach(i => { (groups[i.farmer_id] ||= []).push(i); });
+  const ok = [], bad = [];
+  for (const [fid, items] of Object.entries(groups)) {
+    const farm = items[0].farmer_name;
+    try {
+      const order = await api("/api/v1/orders/", { method: "POST", body: {
+        farmer_id: fid, fulfillment_type: fulfillment,
+        items: items.map(i => ({ product_id: i.product_id, quantity: i.qty }))
+      }});
+      await api("/api/v1/payments/", { method: "POST", body: { order_id: order.id, method } });
+      ok.push(`${farm}: ${naira(order.total_amount)}`);
+      myOrders.unshift({ id: order.id, farm, total: order.total_amount, at: order.created_at });
+      cart = cart.filter(i => i.farmer_id !== fid);
+    } catch (e) { bad.push(`${farm}: ${e.message}`); }
+  }
+  store.set("ac_orders", myOrders);
+  saveCart();
+  let msgs = "";
+  if (ok.length) msgs += `<div class="ok"><strong>Order placed and paid.</strong><br>${ok.map(esc).join("<br>")}<br><a href="#orders" data-close-drawer>See my orders</a></div>`;
+  if (bad.length) msgs += `<p class="err">${bad.map(esc).join("<br>")}</p>`;
+  renderCart(msgs);
+  await loadListings();
+  if (!location.hash || location.hash === "#market") { if (!search) renderShelf(); }
+}
+
+/* ---------- auth ---------- */
+function openAuth(mode = "login") {
+  const d = $("#authDlg");
+  const reg = mode === "register";
+  d.innerHTML = `<div class="dlg">
+    <div class="dlg-head"><h2>${reg ? "Create your account" : "Log in"}</h2><button class="x" data-close aria-label="Close">×</button></div>
+    <form id="authForm" data-mode="${mode}">
+      ${reg ? `
+      <div class="field"><label for="a-name">Full name</label><input id="a-name" required autocomplete="name"></div>
+      <div class="field"><label for="a-email">Email</label><input id="a-email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="a-phone">Phone number</label><input id="a-phone" type="tel" required autocomplete="tel" placeholder="08012345678"></div>
+      <div class="field"><label for="a-pass">Password (at least 8 characters)</label><input id="a-pass" type="password" minlength="8" required autocomplete="new-password"></div>
+      <fieldset class="field"><legend>I want to</legend>
+        <div class="radios">
+          <label><input type="radio" name="role" value="customer" checked> Buy produce</label>
+          <label><input type="radio" name="role" value="farmer"> Sell produce</label>
+        </div></fieldset>`
+      : `
+      <div class="field"><label for="a-id">Email or phone</label><input id="a-id" required autocomplete="username"></div>
+      <div class="field"><label for="a-pass">Password</label><input id="a-pass" type="password" required autocomplete="current-password"></div>`}
+      <p class="err" id="authErr"></p>
+      <button class="btn primary" type="submit" style="width:100%">${reg ? "Create account" : "Log in"}</button>
+    </form>
+    <p class="swap">${reg ? 'Already have an account? <button data-open-auth="login">Log in</button>' : 'New here? <button data-open-auth="register">Create an account</button>'}</p>
+  </div>`;
+  if (!d.open) d.showModal();
+  d.querySelector("input")?.focus();
+}
+async function doLogin(identifier, password) {
+  const data = await api("/api/v1/users/login", { method: "POST", form: { username: identifier, password } });
+  token = data.access_token;
+  store.set("ac_token", token);
+  await loadMe();
+}
+function logout() {
+  token = null; me = null;
+  store.set("ac_token", null);
+  renderChrome(); route(); toast("Logged out");
+}
+
+/* ---------- order actions (review / report) ---------- */
+function openAction(kind, orderId) {
+  actionCtx = { kind, orderId };
+  const d = $("#actionDlg");
+  d.innerHTML = `<div class="dlg">
+    <div class="dlg-head"><h2>${kind === "review" ? "Leave a review" : "Report a problem"}</h2><button class="x" data-close aria-label="Close">×</button></div>
+    <form id="actionForm">
+      ${kind === "review" ? `
+        <div class="field"><label for="r-rate">Rating</label>
+          <select id="r-rate"><option value="5">5 – Excellent</option><option value="4">4 – Good</option><option value="3">3 – Okay</option><option value="2">2 – Poor</option><option value="1">1 – Bad</option></select></div>
+        <div class="field"><label for="r-text">Comment (optional)</label><textarea id="r-text" rows="3"></textarea></div>`
+      : `
+        <div class="field"><label for="r-text">What went wrong?</label><textarea id="r-text" rows="3" required placeholder="e.g. Tomatoes arrived spoiled"></textarea></div>
+        <div class="field"><label for="r-url">Link to a photo (optional)</label><input id="r-url" type="url" placeholder="https://"></div>
+        <p class="fine" style="margin-bottom:.6rem">Problems must be reported within 24 hours of delivery or pickup.</p>`}
+      <p class="err" id="actErr"></p>
+      <button class="btn primary" type="submit" style="width:100%">${kind === "review" ? "Send review" : "Send report"}</button>
+    </form></div>`;
+  d.showModal();
+}
+
+/* ---------- routing ---------- */
+async function route() {
+  const h = location.hash.slice(1) || "market";
+  renderChrome();
+  if (h === "sell") renderSell();
+  else if (h === "orders") await renderOrders();
+  else renderMarket();
+  window.scrollTo({ top: 0 });
+}
+window.addEventListener("hashchange", route);
+
+/* ---------- events ---------- */
+document.addEventListener("click", async e => {
+  const t = e.target.closest("button, a, [data-close]");
+  if (!t) return;
+  if (t.dataset.add) return addToCart(t.dataset.add);
+  if (t.dataset.remove) { cart = cart.filter(i => i.product_id !== t.dataset.remove); saveCart(); return renderCart(); }
+  if (t.dataset.chip) { $("#q").value = t.dataset.chip; return runSearch(t.dataset.chip); }
+  if ("clearSearch" in t.dataset) { search = null; $("#q").value = ""; return renderShelf(); }
+  if ("openCart" in t.dataset) return openDrawer();
+  if ("closeDrawer" in t.dataset) return closeDrawer();
+  if ("checkout" in t.dataset) return checkout();
+  if ("logout" in t.dataset) return logout();
+  if (t.dataset.openAuth) return openAuth(t.dataset.openAuth);
+  if (t.dataset.review) return openAction("review", t.dataset.review);
+  if (t.dataset.report) return openAction("report", t.dataset.report);
+  if ("close" in t.dataset) return t.closest("dialog")?.close();
+});
+$("#scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.dataset.qty) {
+    const item = cart.find(i => i.product_id === t.dataset.qty);
+    const v = parseFloat(t.value);
+    if (item && v > 0) item.qty = v;
+    saveCart(); renderCart();
+  } else if (t.id === "catFilter") { filt.cat = t.value; renderShelf(); }
+  else if (t.id === "orgFilter") { filt.org = t.checked; renderShelf(); }
+});
+
+document.addEventListener("submit", async e => {
+  e.preventDefault();
+  const id = e.target.id;
+  const submitBtn = e.target.querySelector("button[type=submit]");
+  const busy = on => { if (submitBtn) submitBtn.disabled = on; };
+
+  if (id === "searchForm") return runSearch($("#q").value);
+
+  if (id === "authForm") {
+    const err = $("#authErr"); err.textContent = ""; busy(true);
+    try {
+      if (e.target.dataset.mode === "register") {
+        const email = $("#a-email").value.trim(), password = $("#a-pass").value;
+        await api("/api/v1/users/register", { method: "POST", body: {
+          name: $("#a-name").value.trim(), email, phone: $("#a-phone").value.trim(), password,
+          role: e.target.querySelector("input[name=role]:checked").value
+        }});
+        await doLogin(email, password);
+        toast("Welcome to AgriConnect");
+      } else {
+        await doLogin($("#a-id").value.trim(), $("#a-pass").value);
+        toast("Logged in");
+      }
+      $("#authDlg").close();
+      await route();
+    } catch (ex) { err.textContent = ex.message; }
+    busy(false);
+    return;
+  }
+
+  if (id === "profileForm") {
+    const err = $("#pfErr"); err.textContent = ""; busy(true);
+    try {
+      await api("/api/v1/farmers/profile", { method: "POST", body: {
+        farm_name: $("#pf-name").value.trim(),
+        certifications: $("#pf-cert").value.trim() || null,
+        delivery_radius_km: parseFloat($("#pf-rad").value) || 10
+      }});
+      await loadMe(); toast("Farm saved"); renderSell();
+    } catch (ex) { err.textContent = ex.message; busy(false); }
+    return;
+  }
+
+  if (id === "productForm") {
+    const err = $("#pErr"); err.textContent = ""; busy(true);
+    try {
+      await api("/api/v1/products/", { method: "POST", body: {
+        name: $("#p-name").value.trim(), category: $("#p-cat").value.trim(),
+        description: $("#p-desc").value.trim() || null, unit: $("#p-unit").value.trim(),
+        price: parseFloat($("#p-price").value), stock_quantity: parseFloat($("#p-stock").value),
+        is_organic: $("#p-org").checked
+      }});
+      await loadListings(); toast("Listing published"); renderSell();
+    } catch (ex) { err.textContent = ex.message; busy(false); }
+    return;
+  }
+
+  if (id === "actionForm" && actionCtx) {
+    const err = $("#actErr"); err.textContent = ""; busy(true);
+    try {
+      if (actionCtx.kind === "review") {
+        await api("/api/v1/reviews/", { method: "POST", body: {
+          order_id: actionCtx.orderId, rating: parseInt($("#r-rate").value, 10), comment: $("#r-text").value.trim() || null
+        }});
+        toast("Thanks for your review");
+      } else {
+        await api("/api/v1/payments/refund-request", { method: "POST", body: {
+          order_id: actionCtx.orderId, reason: $("#r-text").value.trim(), evidence_url: $("#r-url").value.trim() || null
+        }});
+        toast("Report sent. We'll review it.");
+      }
+      $("#actionDlg").close();
+      renderOrders();
+    } catch (ex) { err.textContent = ex.message; busy(false); }
+  }
+});
+
+/* ---------- boot ---------- */
+(async function init() {
+  await Promise.all([loadMe(), loadListings()]);
+  setBanner();
+  renderChrome();
+  route();
+})();
+</script>
+</body>
+</html>
